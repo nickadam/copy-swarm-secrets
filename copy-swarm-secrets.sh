@@ -30,7 +30,7 @@ do
   SECRET_ARGS=$SECRET_ARGS' --secret '$secret
 done
 
-COMMAND="docker service create --restart-condition=none --name copy-swarm-secrets $SECRET_ARGS -d nickadam/copy-swarm-secrets >/dev/null; sleep 3; docker service logs --raw copy-swarm-secrets; docker service rm copy-swarm-secrets >/dev/null"
+COMMAND="docker service create --restart-condition=none --name copy-swarm-secrets $SECRET_ARGS -d nickadam/copy-swarm-secrets >/dev/null; while ! docker service ps copy-swarm-secrets --format '{{.CurrentState}}' 2>/dev/null | grep Complete >/dev/null; do sleep 1; done; docker service logs --raw copy-swarm-secrets; docker service rm copy-swarm-secrets >/dev/null"
 
 if [ "$SRC" = "localhost" ]
 then

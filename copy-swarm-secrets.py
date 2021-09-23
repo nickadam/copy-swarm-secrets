@@ -24,11 +24,13 @@ if len(sys.argv) > 1:
 
         result = subprocess.run(command, capture_output=True)
 
-        if result.stderr:
-            print(result.stderr.decode('utf-8'), file=sys.stderr)
+        stderr = result.stderr.decode('utf-8').strip()
+        if stderr:
+            print(stderr, file=sys.stderr)
 
-        if result.stdout:
-            print(result.stdout.decode('utf-8'))
+        stdout = result.stdout.decode('utf-8').strip()
+        if stdout:
+            print(stdout)
 
     sys.exit()
 
