@@ -1,10 +1,3 @@
-FROM alpine:latest AS chmod-stuff
-
-COPY copy-swarm-secrets* /
-
-RUN chmod 644 copy-swarm-secrets.py && \
-  chmod 755 copy-swarm-secrets.sh
-
 FROM python:latest AS docker-install
 
 RUN apt-get update && \
@@ -28,6 +21,7 @@ COPY --from=docker-install /usr/bin/docker /usr/bin/docker
 
 COPY --from=docker-install /usr/libexec/docker /usr/libexec/docker/
 
-COPY --from=chmod-stuff /copy-swarm-secrets* /
+COPY --chmod=644 copy-swarm-secrets.py /
+COPY --chmod=755 copy-swarm-secrets.sh /
 
 ENTRYPOINT ["python", "/copy-swarm-secrets.py"]
